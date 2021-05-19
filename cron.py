@@ -84,7 +84,7 @@ def setcolor(device, color, dryrun, verbose):
 
 	rgbcolor = color.hex_l
 	if not dryrun:
-		device.morph(hex=rgbcolor, duration=59000, steps=60) # Set our Blinkstick to morph from one step to another over the next 59 seconds
+		device['blink_device'].morph(hex=rgbcolor, duration=59000, steps=60) # Set our Blinkstick to morph from one step to another over the next 59 seconds
 
 	if verbose:
 		print("Device '{0}' set color to {1}".format(device['name'], rgbcolor))
@@ -93,7 +93,7 @@ def setcolor(device, color, dryrun, verbose):
 
 def turnOff(device, dryrun, verbose):
 	if not dryrun:
-		device.turn_off()
+		device['blink_device'].turn_off()
 
 	if verbose:
 		print("Device '{0}' turned off".format(device['name']))
@@ -112,7 +112,7 @@ def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verbose):
 	entries = getcurrentscheduleentries(config, time)
 
 	for entry in entries:
-		devices = ()
+		devices = []
 		for device in config['devices']:
 			if "all" in entry['devices'] or device['name'] in entry['devices']:
 				if not dryrun:
@@ -125,7 +125,9 @@ def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verbose):
 							continue
 				else:
 					blink_device = "dryrun socket"
-				devices.append(blink_device)
+				new_device = dict(device)
+				new_device['blink_device'] = blink_device
+				devices.append(new_device)
 
 		if "color" in entry:
 			for device in devices:
