@@ -9,7 +9,6 @@ import yaml
 
 from colour import Color
 from blinkstick import blinkstick
-from time import sleep
 
 time_regex = re.compile("^[0-9]{1,2}:[0-9]{2}$")
 timespan_regex = re.compile("^[0-9]{1,2}:[0-9]{2}-[0-9]{1,2}:[0-9]{2}$")
@@ -79,41 +78,29 @@ def getcurrentscheduleentries(config, time):
 				entries.append(new_entry)
 	return entries
 
-def setcolor(device, color, brightness, dryrun=False, verify=True):
-	turnOn(device, dryrun, verify)
-
+def setcolor(device, color, dryrun, verbose):
 	if not isinstance(color, Color):
 		color = Color(color)
 
-	rgbcolor = (int(color.red * 255), int(color.green * 255), int(color.blue * 255))
+	rgbcolor = color.hex_l
 	if not dryrun:
-		device['socket'].setRgb(*rgbcolor, brightness=brightness)
-		sleep(.5)
-	else:
-		print("Device '{0}' set color to {1}, brightness: {2}".format(device['name'], rgbcolor, brightness))
+		device.morph(hex=rgbcolor, duration=59000, steps=60) # Set our Blinkstick to morph from one step to another over the next 59 seconds
 
-	if verify and not dryrun:
-		device['socket'].refreshState()
-		if device['socket'].getRgb() != rgbcolor:
-			return False
+	if verbose:
+		print("Device '{0}' set color to {1}".format(device['name'], rgbcolor))
+
 	return True
 
-def turnOff(device, dryrun=False, verify=True):
+def turnOff(device, dryrun, verbose):
 	if not dryrun:
-		if device['socket'].isOn():
-			device['socket'].turnOff()
-			sleep(.5)
+		device.turn_off()
 
-		if verify:
-			device['socket'].refreshState()
-			if device['socket'].isOn():
-				return False
-	else:
+	if verbose:
 		print("Device '{0}' turned off".format(device['name']))
 
 	return True
 
-def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verify):
+def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verbose):
 	config = loadschedule(configpath)
 
 	if not time:
@@ -125,31 +112,24 @@ def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verify):
 	entries = getcurrentscheduleentries(config, time)
 
 	for entry in entries:
-		devices = []
+		devices = ()
 		for device in config['devices']:
 			if "all" in entry['devices'] or device['name'] in entry['devices']:
 				if not dryrun:
-					try:
-						socket = WifiLedBulb(device['ip'], device['port'])
-					except:
-						socket = "connection failed"
-						print("Connection to '{0}' failed!".format(device['name']))
+					blink_device = blinkstick.find_by_serial(device['serial'])
+					if blink_device is None:
+						print("Couldn't find device '{0}' by serial number ({1})".format(device['name'], device['serial']))
 						if not ignorefailed:
 							sys.exit()
 						else:
 							continue
 				else:
-					socket = "dryrun socket"
-				new_device = dict(device)
-				new_device['socket'] = socket
-				devices.append(new_device)
+					blink_device = "dryrun socket"
+				devices.append(blink_device)
 
-		brightness = None
 		if "color" in entry:
-			if "brightness" in entry:
-				brightness = entry['brightness']
 			for device in devices:
-				setcolor(device, entry['color'], brightness, dryrun, verify)
+				setcolor(device, entry['color'], dryrun, verbose)
 		elif "gradient" in entry:
 			steps = (entry['end'] - entry['start'] + 1)
 			position = (time - entry['start'])
@@ -157,21 +137,12 @@ def setcolorfromschedule(configpath, dryrun, time, ignorefailed, verify):
 			if 'type' in entry:
 				if entry['type'] == 'natural':
 					colorgradient = naturalgradient(entry['gradient']['start'], entry['gradient']['end'], steps)
-			if "brightness" in entry:
-				brightness = entry['brightness']
 			for device in devices:
-				setcolor(device, colorgradient[position], brightness, dryrun, verify)
+				setcolor(device, colorgradient[position], dryrun, verbose)
 		elif "state" in entry:
 			if not entry['state']: # on/yes/true in yaml are equivalent to a boolean True
 				for device in devices:
 					turnOff(device, dryrun, verify)
-			elif entry['state']: # off/no/false in yaml are equivalent to a boolean False
-				for device in devices:
-					turnOn(device, dryrun, verify)
-
-		for device in devices:
-			if not dryrun:
-				device['socket'].close()
 
 def main():
 	parser = argparse.ArgumentParser(description="Run a light schedule for one or more LED controllers. This is intended to run as often as you'd like via a cron job.")
@@ -179,10 +150,10 @@ def main():
 	parser.add_argument("--dry-run", "-d", help="Do a dry run, don't actually make the changes", action='store_true')
 	parser.add_argument("--fudge-time", "-f", help="Fake the time with the provided value instead of using the actual time (HH:MM)")
 	parser.add_argument("--ignore-failed", "-i", help="Ignore failed devices", action="store_true")
-	parser.add_argument("--skip-verify", "-s", help="Skip verifying changes have been made", action="store_false")
+	parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
 	args = parser.parse_args()
 
-	setcolorfromschedule(args.config, args.dry_run, args.fudge_time, args.ignore_failed, args.skip_verify)
+	setcolorfromschedule(args.config, args.dry_run, args.fudge_time, args.ignore_failed, args.verbose)
 
 if __name__=='__main__':
 	sys.exit(main())

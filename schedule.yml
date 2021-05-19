@@ -2,11 +2,9 @@
 
 devices:
 - name: 125g top
-  ip: 10.10.10.11
-  port: 5577
+  serial: 12345
 - name: 125g bottom
-  ip: 10.10.10.12
-  port: 5577
+  serial: 12356
 
 schedule:
 - time: "00:01-07:59"
