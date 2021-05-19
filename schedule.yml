@@ -1,0 +1,141 @@
+---
+
+devices:
+- name: 125g top
+  ip: 10.10.10.11
+  port: 5577
+- name: 125g bottom
+  ip: 10.10.10.12
+  port: 5577
+
+schedule:
+- time: "00:01-07:59"
+  devices:
+  - all
+  state: off
+
+- time: "08:00-10:14"
+  devices:
+  - 125g bottom
+  color: "#190404"
+
+- time: "10:15-10:29"
+  devices:
+  - 125g top
+  gradient: {start: "#040419", end: "#800080"}
+- time: "10:15-10:29"
+  devices:
+  - 125g bottom
+  gradient: {start: "#190404", end: "#0000ff"}
+
+- time: "10:30-10:44"
+  devices:
+  - 125g top
+  gradient: {start: "#800080", end: "#0000ff"}
+- time: "10:30-10:44"
+  devices:
+  - 125g bottom
+  gradient: {start: "#0000ff", end: "#ff0000"}
+
+- time: "10:45-10:59"
+  devices:
+  - 125g top
+  gradient: {start: "#0000ff", end: "#ff0000"}
+- time: "10:45-10:59"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ff0000", end: "#ffa500"}
+
+- time: "11:00-11:29"
+  devices:
+  - 125g top
+  gradient: {start: "#ff0000", end: "#ffa500"}
+- time: "11:00-11:29"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ffa500", end: "#ff9329"}
+
+- time: "11:30-11:59"
+  devices:
+  - 125g top
+  gradient: {start: "#ffa500", end: "#ff9329"}
+- time: "11:30-11:59"
+  devices:
+  - 125g bottom
+  color: "#ff9329"
+
+- time: "12:00-12:29"
+  devices:
+  - all
+  gradient: {start: "#ff9329", end: "#000000"}
+
+- time: "12:30-12:59"
+  devices:
+  - all
+  state: off
+
+
+
+- time: "18:30-18:59"
+  devices:
+  - all
+  gradient: {start: "#000000", end: "#ff9329"}
+
+- time: "19:00-19:29"
+  devices:
+  - 125g top
+  gradient: {start: "#ff9329", end: "#ffa500"}
+- time: "19:00-19:29"
+  devices:
+  - 125g bottom
+  color: "#ff9329"
+
+- time: "19:30-19:59"
+  devices:
+  - 125g top
+  gradient: {start: "#ffa500", end: "#ff0000"}
+- time: "19:30-19:59"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ff9329", end: "#ffa500"}
+
+- time: "20:00-20:14"
+  devices:
+  - 125g top
+  gradient: {start: "#ff0000", end: "#0000ff"}
+- time: "20:00-20:14"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ffa500", end: "#ff0000"}
+
+- time: "20:15-20:29"
+  devices:
+  - 125g top
+  gradient: {start: "#0000ff", end: "#800080"}
+- time: "20:15-20:29"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ff0000", end: "#0000ff"}
+
+- time: "20:30-20:44"
+  devices:
+  - 125g top
+  gradient: {start: "#800080", end: "#020202"}
+- time: "20:30-20:44"
+  devices:
+  - 125g bottom
+  gradient: {start: "#0000ff", end: "#020203"}
+
+- time: "20:45-23:54"
+  devices:
+  - 125g top
+  color: "#010102"
+- time: "20:45-00:00"
+  devices:
+  - 125g bottom
+  state: off
+
+- time: "23:55-00:00"
+  devices:
+  - 125g top
+  gradient: {start: "#010102", end: "#000000"}
