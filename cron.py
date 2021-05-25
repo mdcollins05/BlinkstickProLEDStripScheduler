@@ -10,6 +10,9 @@ import yaml
 from colour import Color
 from blinkstick import blinkstick
 
+from threading import Thread
+
+
 timeRegex = re.compile("^[0-9]{1,2}:[0-9]{2}$")
 timespanRegex = re.compile("^[0-9]{1,2}:[0-9]{2}-[0-9]{1,2}:[0-9]{2}$")
 
@@ -84,7 +87,7 @@ def set_color(device, color, dryrun, verbose):
 
   RGBColor = color.hex_l
   if not dryrun:
-    device['blink_device'].morph(hex=RGBColor, duration=59000, steps=60) # Set our Blinkstick to morph from one step to another over the next 59 seconds
+    device['blink_device'].morph(hex=RGBColor, duration=50000, steps=4) # Set our Blinkstick to morph from one color to another over the next 50 seconds
 
   if verbose:
     print("Device '{0}' set color to {1}".format(device['name'], RGBColor))
@@ -102,6 +105,8 @@ def turn_off(device, dryrun, verbose):
 
 def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
   config = load_schedule(configpath)
+
+  threads = []
 
   if not time:
     time = datetime.datetime.now()
@@ -131,7 +136,8 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
 
     if "color" in entry:
       for device in devices:
-        set_color(device, entry['color'], dryrun, verbose)
+        thread = Thread(target=set_color, args=(device, entry['color'], dryrun, verbose)).start()
+        threads.append(thread)
     elif "gradient" in entry:
       steps = (entry['end'] - entry['start'] + 1)
       position = (time - entry['start'])
@@ -140,11 +146,15 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
         if entry['type'] == 'natural':
           colorGradient = natural_gradient(entry['gradient']['start'], entry['gradient']['end'], steps)
       for device in devices:
-        set_color(device, colorGradient[position], dryrun, verbose)
+        thread = Thread(target=set_color, args=(device, colorGradient[position], dryrun, verbose))
+        threads.append(thread)
     elif "state" in entry:
       if not entry['state']: # on/yes/true in yaml are equivalent to a boolean True
         for device in devices:
           turn_off(device, dryrun, verify)
+
+  for thread in threads:
+    thread.join()
 
 def main():
   parser = argparse.ArgumentParser(description="Run a light schedule for one or more LED controllers. This is intended to run as often as you'd like via a cron job.")
