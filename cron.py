@@ -136,7 +136,8 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
 
     if "color" in entry:
       for device in devices:
-        thread = Thread(target=set_color, args=(device, entry['color'], dryrun, verbose)).start()
+        thread = Thread(target=set_color, args=(device, entry['color'], dryrun, verbose))
+        thread.start()
         threads.append(thread)
     elif "gradient" in entry:
       steps = (entry['end'] - entry['start'] + 1)
@@ -147,6 +148,7 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
           colorGradient = natural_gradient(entry['gradient']['start'], entry['gradient']['end'], steps)
       for device in devices:
         thread = Thread(target=set_color, args=(device, colorGradient[position], dryrun, verbose))
+        thread.start()
         threads.append(thread)
     elif "state" in entry:
       if not entry['state']: # on/yes/true in yaml are equivalent to a boolean True
