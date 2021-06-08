@@ -2,9 +2,9 @@
 
 devices:
 - name: 125g top
-  serial: 12345
+  serial: BS038250-2.2
 - name: 125g bottom
-  serial: 12356
+  serial: BS038248-2.2
 
 schedule:
 - time: "00:01-07:59"

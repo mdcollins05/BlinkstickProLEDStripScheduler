@@ -2,8 +2,8 @@
 
 import argparse
 import datetime
+import os.path
 import re
-import socket
 import sys
 import yaml
 
@@ -81,13 +81,16 @@ def get_current_schedule_entries(config, time):
         entries.append(newEntry)
   return entries
 
-def set_color(device, color, dryrun, verbose):
+def set_color(device, color, morph, dryrun, verbose):
   if not isinstance(color, Color):
     color = Color(color)
 
   RGBColor = color.hex_l
   if not dryrun:
-    device['blink_device'].morph(hex=RGBColor, duration=50000, steps=4) # Set our Blinkstick to morph from one color to another over the next 50 seconds
+    if morph:
+      device['blink_device'].morph(hex=RGBColor, duration=60000, steps=5) # Set our Blinkstick to morph from one color to another over the next 50 seconds
+    else:
+      device['blink_device'].set_color(hex=RGBColor)
 
   if verbose:
     print("Device '{0}' set color to {1}".format(device['name'], RGBColor))
@@ -103,7 +106,7 @@ def turn_off(device, dryrun, verbose):
 
   return True
 
-def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
+def set_color_from_schedule(configpath, dryrun, time, morph, ignorefailed, verbose):
   config = load_schedule(configpath)
 
   threads = []
@@ -136,7 +139,7 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
 
     if "color" in entry:
       for device in devices:
-        thread = Thread(target=set_color, args=(device, entry['color'], dryrun, verbose))
+        thread = Thread(target=set_color, args=(device, entry['color'], morph, dryrun, verbose))
         thread.start()
         threads.append(thread)
     elif "gradient" in entry:
@@ -147,13 +150,13 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
         if entry['type'] == 'natural':
           colorGradient = natural_gradient(entry['gradient']['start'], entry['gradient']['end'], steps)
       for device in devices:
-        thread = Thread(target=set_color, args=(device, colorGradient[position], dryrun, verbose))
+        thread = Thread(target=set_color, args=(device, colorGradient[position], morph, dryrun, verbose))
         thread.start()
         threads.append(thread)
     elif "state" in entry:
       if not entry['state']: # on/yes/true in yaml are equivalent to a boolean True
         for device in devices:
-          turn_off(device, dryrun, verify)
+          turn_off(device, dryrun, verbose)
 
   for thread in threads:
     thread.join()
@@ -161,13 +164,14 @@ def set_color_from_schedule(configpath, dryrun, time, ignorefailed, verbose):
 def main():
   parser = argparse.ArgumentParser(description="Run a light schedule for one or more LED controllers. This is intended to run as often as you'd like via a cron job.")
   parser.add_argument("--config", "-c", help="Config file")
-  parser.add_argument("--dry-run", "-d", help="Do a dry run, don't actually make the changes", action='store_true')
+  parser.add_argument("--dry-run", "-d", help="Do a dry run, don't actually make the changes", action="store_true")
   parser.add_argument("--fudge-time", "-f", help="Fake the time with the provided value instead of using the actual time (HH:MM)")
   parser.add_argument("--ignore-failed", "-i", help="Ignore failed devices", action="store_true")
+  parser.add_argument("--morph", "-m", help="Morph colors over the minute. Without this, the color is immediately set.", action="store_true")
   parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
   args = parser.parse_args()
 
-  set_color_from_schedule(args.config, args.dry_run, args.fudge_time, args.ignore_failed, args.verbose)
+  set_color_from_schedule(args.config, args.dry_run, args.fudge_time, args.morph, args.ignore_failed, args.verbose)
 
 if __name__=='__main__':
   sys.exit(main())
