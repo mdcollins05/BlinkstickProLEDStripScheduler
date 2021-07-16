@@ -154,6 +154,7 @@ def set_color_from_schedule(configpath, dryrun, time, morph, ignorefailed, verbo
     if "color" in entry:
       for device in devices:
         thread = Thread(target=set_color, args=(device, entry['color'], morph, dryrun, verbose))
+        thread.daemon = True # Python 2.7 compatible
         thread.start()
         threads.append(thread)
     elif "gradient" in entry:
@@ -165,6 +166,7 @@ def set_color_from_schedule(configpath, dryrun, time, morph, ignorefailed, verbo
           colorGradient = natural_gradient(entry['gradient']['start'], entry['gradient']['end'], steps)
       for device in devices:
         thread = Thread(target=set_color, args=(device, colorGradient[position], morph, dryrun, verbose))
+        thread.daemon = True # Python 2.7 compatible
         thread.start()
         threads.append(thread)
     elif "state" in entry:
