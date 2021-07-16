@@ -141,6 +141,10 @@ def set_color_from_schedule(configpath, dryrun, time, morph, ignorefailed, verbo
               sys.exit()
             else:
               continue
+          if 'mode' in device:
+            if device['mode'] in [0, 1]:
+              if blinkDevice.get_mode() != device['mode']:
+                blinkDevice.set_mode(int(device['mode']))
         else:
           blinkDevice = "dryrun socket"
         newDevice = dict(device)
