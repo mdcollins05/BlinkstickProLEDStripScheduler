@@ -3,8 +3,10 @@
 devices:
 - name: 125g top
   serial: BS038250-2.2
+  swap_r_and_g: true
 - name: 125g bottom
   serial: BS038248-2.2
+  swap_r_and_g: true
 
 schedule:
 - time: "00:01-07:59"

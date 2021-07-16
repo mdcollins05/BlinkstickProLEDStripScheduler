@@ -51,6 +51,10 @@ def linear_gradient(start, end, steps):
 
   return RGBList
 
+def swap_r_and_g(hex):
+  color = Color(hex)
+  return Color(rgb=(color.green, color.red, color.blue))
+
 def hex_to_RGB(hex):
   color = Color(hex)
   return (int(color.red * 255), int(color.green * 255), int(color.blue * 255))
@@ -84,6 +88,10 @@ def get_current_schedule_entries(config, time):
 def set_color(device, color, morph, dryrun, verbose):
   if not isinstance(color, Color):
     color = Color(color)
+
+  if 'swap_r_and_g' in device:
+    if device['swap_r_and_g']:
+      color = swap_r_and_g(color.hex_l)
 
   RGBColor = color.hex_l
   if not dryrun:
