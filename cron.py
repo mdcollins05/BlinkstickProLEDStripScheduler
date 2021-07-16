@@ -89,6 +89,8 @@ def set_color(device, color, morph, dryrun, verbose):
   if not isinstance(color, Color):
     color = Color(color)
 
+  visualColor = color.hex_l
+
   if 'swap_r_and_g' in device:
     if device['swap_r_and_g']:
       color = swap_r_and_g(color.hex_l)
@@ -101,7 +103,7 @@ def set_color(device, color, morph, dryrun, verbose):
       device['blink_device'].set_color(hex=RGBColor)
 
   if verbose:
-    print("Device '{0}' set color to {1}".format(device['name'], RGBColor))
+    print("Device '{0}' set color to {1}".format(device['name'], visualColor))
 
   return True
 
