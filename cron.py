@@ -98,7 +98,7 @@ def set_color(device, color, morph, dryrun, verbose):
   RGBColor = color.hex_l
   if not dryrun:
     if morph:
-      device['blink_device'].morph(hex=RGBColor, duration=60000, steps=5) # Set our Blinkstick to morph from one color to another over the next 50 seconds
+      device['blink_device'].morph(hex=RGBColor, duration=60000, steps=10) # Set our Blinkstick to morph from one color to another over the next 50 seconds
     else:
       device['blink_device'].set_color(hex=RGBColor)
 
