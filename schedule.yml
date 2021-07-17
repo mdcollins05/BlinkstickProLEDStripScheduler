@@ -122,22 +122,22 @@ schedule:
 - time: "20:30-20:44"
   devices:
   - 125g top
-  gradient: {start: "#800080", end: "#020202"}
+  gradient: {start: "#800080", end: "#0f0f0f"}
 - time: "20:30-20:44"
   devices:
   - 125g bottom
-  gradient: {start: "#0000ff", end: "#020203"}
+  gradient: {start: "#0000ff", end: "#0f0f12"}
 
-- time: "20:45-23:54"
+- time: "20:45-23:44"
   devices:
   - 125g top
-  color: "#010102"
-- time: "20:45-00:00"
+  color: "#0f0f0f"
+- time: "20:45-23:44"
   devices:
   - 125g bottom
   state: off
 
-- time: "23:55-00:00"
+- time: "23:45-00:00"
   devices:
   - 125g top
-  gradient: {start: "#010102", end: "#000000"}
+  gradient: {start: "#0f0f0f", end: "#000000"}
