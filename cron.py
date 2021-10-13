@@ -187,6 +187,10 @@ def main():
   parser.add_argument("--verbose", "-v", help="Be more verbose", action="store_true")
   args = parser.parse_args()
 
+  if args.config is None or not os.path.isfile(args.config):
+    print("Config file doesn't exist or was not specified")
+    return False
+
   set_color_from_schedule(args.config, args.dry_run, args.fudge_time, args.morph, args.ignore_failed, args.verbose)
 
 if __name__=='__main__':

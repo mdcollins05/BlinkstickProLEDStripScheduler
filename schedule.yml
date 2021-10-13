@@ -16,128 +16,160 @@ schedule:
   - all
   state: off
 
-- time: "08:00-10:14"
+- time: "08:00-09:14"
   devices:
   - 125g bottom
-  color: "#190404"
+  gradient: {start: "#000000", end: "#190404"}
 
-- time: "10:15-10:29"
+- time: "09:15-09:29"
   devices:
   - 125g top
-  gradient: {start: "#040419", end: "#800080"}
-- time: "10:15-10:29"
+  gradient: {start: "#000000", end: "#800080"}
+- time: "09:15-09:29"
   devices:
   - 125g bottom
   gradient: {start: "#190404", end: "#0000ff"}
 
-- time: "10:30-10:44"
+- time: "09:30-09:44"
   devices:
   - 125g top
   gradient: {start: "#800080", end: "#0000ff"}
-- time: "10:30-10:44"
+- time: "09:30-09:44"
   devices:
   - 125g bottom
   gradient: {start: "#0000ff", end: "#ff0000"}
 
-- time: "10:45-10:59"
+- time: "09:45-09:59"
   devices:
   - 125g top
   gradient: {start: "#0000ff", end: "#ff0000"}
-- time: "10:45-10:59"
+- time: "09:45-09:59"
   devices:
   - 125g bottom
   gradient: {start: "#ff0000", end: "#ffa500"}
 
-- time: "11:00-11:29"
+# Aquarium lights start ramping on for 15 minutes
+# and stay at sunrise/sunset setting for 1 hour
+# then ramp for 15 more minutes to full
+
+- time: "10:00-10:29"
   devices:
   - 125g top
   gradient: {start: "#ff0000", end: "#ffa500"}
-- time: "11:00-11:29"
+- time: "10:00-10:29"
   devices:
   - 125g bottom
   gradient: {start: "#ffa500", end: "#ff9329"}
 
-- time: "11:30-11:59"
+- time: "10:30-10:59"
   devices:
   - 125g top
   gradient: {start: "#ffa500", end: "#ff9329"}
-- time: "11:30-11:59"
+- time: "10:30-10:59"
   devices:
   - 125g bottom
   color: "#ff9329"
 
-- time: "12:00-12:29"
+- time: "11:00-11:29"
   devices:
   - all
   gradient: {start: "#ff9329", end: "#000000"}
 
-- time: "12:30-12:59"
+
+- time: "11:30-17:29"
   devices:
-  - all
+  - 125g top
   state: off
 
-
-
-- time: "18:30-18:59"
+- time: "11:30-17:29"
   devices:
-  - all
-  gradient: {start: "#000000", end: "#ff9329"}
+  - 125g bottom
+  color: "#006f3f"
 
-- time: "19:00-19:29"
+
+- time: "17:30-17:59"
+  devices:
+  - 125g top
+  gradient: {start: "#000000", end: "#ff9329"}
+- time: "17:30-17:59"
+  devices:
+  - 125g bottom
+  gradient: {start: "#006f3f", end: "#ff9329"}
+
+# Aquarium lights start ramping down for 15 minutes
+# and stay at sunrise/sunset setting for 1 hour
+# then ramp down for another 15 minutes
+
+- time: "18:00-18:29"
   devices:
   - 125g top
   gradient: {start: "#ff9329", end: "#ffa500"}
-- time: "19:00-19:29"
+- time: "18:00-18:29"
   devices:
   - 125g bottom
   color: "#ff9329"
 
-- time: "19:30-19:59"
+- time: "18:30-18:59"
   devices:
   - 125g top
   gradient: {start: "#ffa500", end: "#ff0000"}
-- time: "19:30-19:59"
+- time: "18:30-18:59"
   devices:
   - 125g bottom
   gradient: {start: "#ff9329", end: "#ffa500"}
 
-- time: "20:00-20:14"
+- time: "19:00-19:14"
   devices:
   - 125g top
   gradient: {start: "#ff0000", end: "#0000ff"}
-- time: "20:00-20:14"
+- time: "19:00-19:14"
   devices:
   - 125g bottom
   gradient: {start: "#ffa500", end: "#ff0000"}
 
-- time: "20:15-20:29"
+- time: "19:15-19:29"
   devices:
   - 125g top
   gradient: {start: "#0000ff", end: "#800080"}
-- time: "20:15-20:29"
+- time: "19:15-19:29"
   devices:
   - 125g bottom
   gradient: {start: "#ff0000", end: "#0000ff"}
 
-- time: "20:30-20:44"
+- time: "19:30-19:44"
   devices:
   - 125g top
-  gradient: {start: "#800080", end: "#0f0f0f"}
-- time: "20:30-20:44"
+  gradient: {start: "#800080", end: "#2f2f2f"}
+- time: "19:30-19:44"
   devices:
   - 125g bottom
   gradient: {start: "#0000ff", end: "#0f0f12"}
 
-- time: "20:45-23:44"
+#- time: "19:45-22:59"
+#  devices:
+#  - 125g top
+#  gradient: {start: "#2f2f2f", end: "#0c0c0c"}
+#- time: "19:45-22:59"
+#  devices:
+#  - 125g bottom
+#  state: off
+
+#- time: "23:00-23:30"
+#  devices:
+#  - 125g top
+#  gradient: {start: "#0c0c0c", end: "#000000"}
+
+- time: "19:45-22:59"
   devices:
   - 125g top
-  color: "#0f0f0f"
-- time: "20:45-23:44"
+  gradient: {start: "#2f2f2f", end: "#000000"}
+- time: "19:45-22:59"
   devices:
   - 125g bottom
-  state: off
+  gradient: {start: "#0f0f12", end: "#1c1c1c"}
 
-- time: "23:45-00:00"
+- time: "23:00-23:30"
   devices:
   - 125g top
-  gradient: {start: "#0f0f0f", end: "#000000"}
+  - 125g bottom
+  gradient: {start: "#1c1c1c", end: "#000000"}
