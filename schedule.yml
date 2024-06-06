@@ -72,8 +72,13 @@ schedule:
 
 - time: "11:00-11:29"
   devices:
-  - all
+  - 125g top
   gradient: {start: "#ff9329", end: "#000000"}
+
+- time: "11:00-11:29"
+  devices:
+  - 125g bottom
+  gradient: {start: "#ff9329", end: "#006f3f"}
 
 
 - time: "11:30-17:29"
@@ -171,5 +176,8 @@ schedule:
 - time: "23:00-23:30"
   devices:
   - 125g top
+  state: off
+- time: "23:00-23:30"
+  devices:
   - 125g bottom
   gradient: {start: "#1c1c1c", end: "#000000"}
