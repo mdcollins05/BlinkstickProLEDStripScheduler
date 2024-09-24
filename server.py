@@ -14,7 +14,6 @@ from blinkstick import blinkstick
 
 from threading import Thread
 
-
 timeRegex = re.compile("^[0-9]{1,2}:[0-9]{2}$")
 timespanRegex = re.compile("^[0-9]{1,2}:[0-9]{2}-[0-9]{1,2}:[0-9]{2}$")
 
@@ -100,7 +99,7 @@ def set_color(device, color, morph, dryrun, verbose):
   RGBColor = color.hex_l
   if not dryrun:
     if morph:
-      device['blink_device'].morph(hex=RGBColor, duration=60000, steps=10) # Set our Blinkstick to morph from one color to another over the next 50 seconds
+      device['blink_device'].morph(hex=RGBColor, duration=60000, steps=10) # Set our Blinkstick to morph from one color to another over the next ~55 seconds
     else:
       device['blink_device'].set_color(hex=RGBColor)
 
@@ -127,6 +126,9 @@ def set_color_from_schedule(configpath, dryrun, time, morph, ignorefailed, verbo
     time = datetime.datetime.now()
   else:
     time = datetime.datetime.strptime(time, "%H:%M").time()
+
+  if verbose:
+    print("Processing for time: {}".format(time))
 
   time = time.hour*60 + time.minute
   entries = get_current_schedule_entries(config, time)
@@ -193,7 +195,7 @@ def main():
     print("Config file doesn't exist or was not specified")
     return False
 
-  schedule.every().minute.do(set_color_from_schedule, args.config, args.dry_run, args.fudge_time, args.morph, args.ignore_failed, args.verbose)
+  schedule.every().minute.at(':00').do(set_color_from_schedule, args.config, args.dry_run, args.fudge_time, args.morph, args.ignore_failed, args.verbose)
 
   while True:
     schedule.run_pending()
