@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+colour = "==0.1.4"
+blinkstick = "==1.2.0"
+pyyaml = "*"
+schedule = "*"
+pyusb = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
